@@ -4,6 +4,8 @@ from Textbutton import TButton
 
 state = 0
 times = 0
+Ztimes = 0
+Ftimes = 0
 def callback():
     global state,times
     times = times + 1
@@ -16,12 +18,19 @@ def callback():
     elif a == 0 and b == 1 or a == 1 and b == 0:
         state = 3
     return state
-
+def counter():
+    global Ztimes,Ftimes
+    if state == 1:
+        Ztimes = Ztimes + 1
+    elif state == 2:
+        Ftimes = Ftimes + 1
+    return Ztimes, Ftimes
 pygame.init()
 screen = pygame.display.set_mode((400, 700))
 pygame.display.set_caption("圣杯模拟器")
 font = pygame.font.SysFont("Times New Roman", 50)
-tfont = pygame.font.SysFont("Times New Roma",30)
+tfont = pygame.font.SysFont("Times New Roman",30)
+sfont = pygame.font.SysFont("Times New Roman",20)
 # import image
 boundw = pygame.transform.scale(pygame.image.load("./resource/栅栏横.png").convert_alpha(), (450, 10))
 boundh = pygame.transform.scale(pygame.image.load("./resource/栅栏竖.png").convert_alpha(), (10, 750))
@@ -52,7 +61,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             Sbutton.mouseUp(mx, my)
             clicksound.play()
-            pygame.time.wait(10)
+            counter()
         pygame.display.update()
         screen.fill((255, 255, 255))
         Sbutton.draw(screen)
@@ -60,17 +69,21 @@ while running:
         screen.blit(boundw, (-25, 690))
         screen.blit(boundh, (0, -25))
         screen.blit(boundh, (390, -25))
-        screen.blit(background, (50, 100))
+        screen.blit(background, (50, 120))
         if state == 1:
-            screen.blit(shengbeiF, (100,175))
-            screen.blit(shengbeiF,(210,175))
+            screen.blit(shengbeiF, (100,205))
+            screen.blit(shengbeiF,(210,205))
         elif state == 2:
-            screen.blit(shengbeiZ, (100, 175))
-            screen.blit(shengbeiZ, (210, 175))
+            screen.blit(shengbeiZ, (100, 205))
+            screen.blit(shengbeiZ, (210, 205))
         elif state == 3:
-            screen.blit(shengbeiZ, (100, 175))
-            screen.blit(shengbeiF, (210, 175))
+            screen.blit(shengbeiZ, (100, 205))
+            screen.blit(shengbeiF, (210, 205))
         #text
         text = tfont.render(f"The times you clicks:{times}",True,(0,0,0))
-        screen.blit(text,(95,50))
+        textZ = sfont.render(f"The times agree appear:{Ztimes}",True,(0,0,0))
+        textF = sfont.render(f"The times disagree appear:{Ftimes}",True,(0,0,0))
+        screen.blit(text,(85,50))
+        screen.blit(textZ,(20,85))
+        screen.blit(textF,(160,115))
     pygame.display.flip()
